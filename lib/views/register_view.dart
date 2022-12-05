@@ -3,14 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_project/firebase_options.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _RegisterViewState extends State<RegisterView> {
   late final _email;
   late final _password;
 
@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('Register')),
 
       //Future Builder: for firebase initialiazation before app starts it takes future and return callback on the basis of success or error
       body: FutureBuilder(
@@ -65,15 +65,13 @@ class _LoginViewState extends State<LoginView> {
                         final password = _password.text;
                         try {
                           final userCredentials = await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
+                              .createUserWithEmailAndPassword(
                                   email: email, password: password);
-                          print(userCredentials);
                         } on FirebaseAuthException catch (e) {
-                          print(e.runtimeType);
-                          print('User does not exist!\n ${e.code} ');
+                          print('Error:${e.code}');
                         }
                       },
-                      child: (const Text('Login'))),
+                      child: (const Text('Register'))),
                 ],
               );
             default:

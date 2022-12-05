@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:learning_project/firebase_options.dart';
 import 'package:learning_project/views/login_view.dart';
-import 'firebase_Options.dart';
+import 'package:learning_project/views/register_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const RegisterView(),
+      home: const HomePage(),
     );
   }
 }
@@ -35,35 +36,13 @@ class MyApp extends StatelessWidget {
 
 //stateless widget: cannot redraw itself and contain mutable data.
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
-
-  @override
-  State<RegisterView> createState() => _RegisterViewState();
-}
-
-class _RegisterViewState extends State<RegisterView> {
-  late final _email;
-  late final _password;
-
-  @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(title: const Text('Home')),
 
       //Future Builder: for firebase initialiazation before app starts it takes future and return callback on the basis of success or error
       body: FutureBuilder(
@@ -74,39 +53,7 @@ class _RegisterViewState extends State<RegisterView> {
           //while waiting on firebase connection we tell user that its loading
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return Column(
-                children: [
-                  TextField(
-                    controller: _email,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(hintText: 'Enter email'),
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration:
-                        const InputDecoration(hintText: 'Enter password'),
-                  ),
-                  TextButton(
-                      onPressed: () async {
-                        final email = _email.text;
-                        final password = _password.text;
-                        try {
-                          final userCredentials = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                                  email: email, password: password);
-                          print(userCredentials);
-                        } on FirebaseAuthException catch (e) {
-                          print('${e.code}');
-                        }
-                      },
-                      child: (const Text('Register'))),
-                ],
-              );
+              return const Text('Done');
             default:
               return const Text('Loading...');
           }

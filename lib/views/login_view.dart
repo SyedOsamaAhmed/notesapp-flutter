@@ -1,48 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:learning_project/views/login_view.dart';
-import 'firebase_Options.dart';
+import 'package:learning_project/firebase_Options.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const RegisterView(),
-    );
-  }
+  State<LoginView> createState() => _LoginViewState();
 }
 
-//widget:elements of UI on screen of fluuter app.
-//stateful widget:
-/*
-    state: data mutated(chaneged) by user or application.
-    > on the screen that can be seen.
-    > contains data changing and can read/write itself.
-
- */
-
-//stateless widget: cannot redraw itself and contain mutable data.
-
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
-
-  @override
-  State<RegisterView> createState() => _RegisterViewState();
-}
-
-class _RegisterViewState extends State<RegisterView> {
+class _LoginViewState extends State<LoginView> {
   late final _email;
   late final _password;
 
@@ -63,7 +31,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(title: const Text('Login')),
 
       //Future Builder: for firebase initialiazation before app starts it takes future and return callback on the basis of success or error
       body: FutureBuilder(
@@ -97,14 +65,15 @@ class _RegisterViewState extends State<RegisterView> {
                         final password = _password.text;
                         try {
                           final userCredentials = await FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
+                              .signInWithEmailAndPassword(
                                   email: email, password: password);
                           print(userCredentials);
                         } on FirebaseAuthException catch (e) {
-                          print('${e.code}');
+                          print(e.runtimeType);
+                          print('User does not exist!\n ${e.code} ');
                         }
                       },
-                      child: (const Text('Register'))),
+                      child: (const Text('Login'))),
                 ],
               );
             default:

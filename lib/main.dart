@@ -21,6 +21,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
+      //movement b/w screens. These are named routes
+      routes: {
+        '/login/': (context) => const LoginView(),
+        '/register/': (context) => const RegisterView(),
+      },
     );
   }
 }
@@ -54,7 +59,7 @@ class HomePage extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               final currentUser = FirebaseAuth.instance.currentUser;
-              print(currentUser);
+
               // if (currentUser?.emailVerified ?? false) {
               //   return (Text('Done'));
               // } else {

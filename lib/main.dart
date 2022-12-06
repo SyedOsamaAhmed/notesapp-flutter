@@ -53,12 +53,44 @@ class HomePage extends StatelessWidget {
           //while waiting on firebase connection we tell user that its loading
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return const Text('Done');
+              final currentUser = FirebaseAuth.instance.currentUser;
+              print(currentUser);
+              // if (currentUser?.emailVerified ?? false) {
+              //   return (Text('Done'));
+              // } else {
+              //   return const VerificationView();
+              // }
+              return const LoginView();
             default:
               return const Text('Loading...');
           }
         },
       ),
+    );
+  }
+}
+
+class VerificationView extends StatefulWidget {
+  const VerificationView({super.key});
+
+  @override
+  State<VerificationView> createState() => _VerificationViewState();
+}
+
+class _VerificationViewState extends State<VerificationView> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text("Verify your email address"),
+        TextButton(
+            onPressed: () async {
+              final user = FirebaseAuth.instance.currentUser;
+              print(user);
+              await user?.sendEmailVerification();
+            },
+            child: const Text('Send email verification'))
+      ],
     );
   }
 }

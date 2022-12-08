@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:learning_project/firebase_options.dart';
 import 'package:learning_project/views/login_view.dart';
 import 'package:learning_project/views/register_view.dart';
+import 'package:learning_project/views/verifyEmail_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,56 +47,31 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-
-      //Future Builder: for firebase initialiazation before app starts it takes future and return callback on the basis of success or error
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          //while waiting on firebase connection we tell user that its loading
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final currentUser = FirebaseAuth.instance.currentUser;
-
-              // if (currentUser?.emailVerified ?? false) {
-              //   return (Text('Done'));
-              // } else {
-              //   return const VerificationView();
-              // }
-              return const LoginView();
-            default:
-              return const Text('Loading...');
-          }
-        },
+    //Future Builder: for firebase initialiazation before app starts it takes future and return callback on the basis of success or error
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
       ),
-    );
-  }
-}
+      builder: (context, snapshot) {
+        //while waiting on firebase connection we tell user that its loading
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final currentUser = FirebaseAuth.instance.currentUser;
 
-class VerificationView extends StatefulWidget {
-  const VerificationView({super.key});
-
-  @override
-  State<VerificationView> createState() => _VerificationViewState();
-}
-
-class _VerificationViewState extends State<VerificationView> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text("Verify your email address"),
-        TextButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              print(user);
-              await user?.sendEmailVerification();
-            },
-            child: const Text('Send email verification'))
-      ],
+            if (currentUser != null) {
+              if (currentUser.emailVerified) {
+                print('Email is Verified!');
+              } else {
+                return const VerificationView();
+              }
+            } else {
+              return const LoginView();
+            }
+            return const Text("Done!");
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }

@@ -5,9 +5,6 @@ import 'package:learning_project/firebase_options.dart';
 import 'package:learning_project/views/login_view.dart';
 import 'package:learning_project/views/register_view.dart';
 import 'package:learning_project/views/verifyEmail_view.dart';
-import 'dart:developer' as devtools
-    show
-        log; // through show keyword we accquired necessary things from library that we need and as is used as alias here so that if we mistakenly build log function we are  unable to distiguish it from dart libary function.
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +26,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
+        '/notes/': (context) => const NotesView(),
       },
     );
   }
@@ -99,6 +97,9 @@ class _NotesViewState extends State<NotesView> {
               final shouldLogout = await showLogoutDialog(context);
               if (shouldLogout) {
                 await FirebaseAuth.instance.signOut();
+                if (!mounted) {
+                  return;
+                }
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil('/login/', (_) => false);
               }
@@ -121,7 +122,7 @@ Future<bool> showLogoutDialog(BuildContext context) {
       builder: (context) {
         return AlertDialog(
           title: const Text('Sign Out'),
-          content: const Text('Are you sure you want to sign out?'),
+          content: const Text('Are you sure you want to log out?'),
           actions: [
             TextButton(
               onPressed: () {

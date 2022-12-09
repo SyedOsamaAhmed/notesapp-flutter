@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as devtools
+    show
+        log; // through show keyword we accquired necessary things from library that we need and as is used as alias here so that if we mistakenly build log function we are  unable to distiguish it from dart libary function.
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -51,13 +54,18 @@ class _LoginViewState extends State<LoginView> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  final userCredentials = await FirebaseAuth.instance
-                      .signInWithEmailAndPassword(
-                          email: email, password: password);
-                  print(userCredentials);
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: email, password: password);
+                  if (!mounted) {
+                    return;
+                  }
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/notes/',
+                    (route) => false,
+                  );
                 } on FirebaseAuthException catch (e) {
-                  print(e.runtimeType);
-                  print('User does not exist!\n ${e.code} ');
+                  devtools.log(e.runtimeType.toString());
+                  devtools.log('User does not exist!\n ${e.code.toString()} ');
                 }
               },
               child: (const Text('Login'))),

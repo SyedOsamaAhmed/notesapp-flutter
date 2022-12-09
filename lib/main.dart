@@ -70,7 +70,18 @@ class HomePage extends StatelessWidget {
             }
 
           default:
-            return const CircularProgressIndicator();
+            return Scaffold(
+                body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    height: 15,
+                  )
+                ],
+              ),
+            ));
         }
       },
     );

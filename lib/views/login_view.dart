@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
-import 'package:learning_project/constants/routes.dart'; // through show keyword we accquired necessary things from library that we need and as is used as alias here so that if we mistakenly build log function we are  unable to distiguish it from dart libary function.
+import 'package:learning_project/constants/routes.dart';
+
+import '../utilities/show_error_dialog.dart'; // through show keyword we accquired necessary things from library that we need and as is used as alias here so that if we mistakenly build log function we are  unable to distiguish it from dart libary function.
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -64,8 +65,24 @@ class _LoginViewState extends State<LoginView> {
                     (route) => false,
                   );
                 } on FirebaseAuthException catch (e) {
-                  devtools.log(e.runtimeType.toString());
-                  devtools.log('User does not exist!\n ${e.code.toString()} ');
+                  if (e.code == 'user-not-found') {
+                    await showErrorDialog(context, 'User not Found');
+                  } else if (e.code == 'wrong-password') {
+                    await showErrorDialog(
+                      context,
+                      'Password entered is incorrect',
+                    );
+                  } else {
+                    await showErrorDialog(
+                      context,
+                      'Error:${e.code}',
+                    );
+                  }
+                } catch (e) {
+                  await showErrorDialog(
+                    context,
+                    e.toString(),
+                  );
                 }
               },
               child: (const Text('Login'))),

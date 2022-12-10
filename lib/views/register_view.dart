@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 import 'package:learning_project/constants/routes.dart';
+import 'package:learning_project/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -56,8 +56,40 @@ class _RegisterViewState extends State<RegisterView> {
                 try {
                   await FirebaseAuth.instance.createUserWithEmailAndPassword(
                       email: email, password: password);
+                  if (!mounted) {
+                    return;
+                  }
+
+                  final user = FirebaseAuth.instance.currentUser;
+                  user?.sendEmailVerification();
+                  Navigator.of(context).pushNamed(verifyEmailRoute);
                 } on FirebaseAuthException catch (e) {
-                  devtools.log('Error:${e.code.toString()}');
+                  if (e.code == 'weak-password') {
+                    await showErrorDialog(
+                      context,
+                      'Make sure password is strong',
+                    );
+                  } else if (e.code == 'email-already-in-use') {
+                    await showErrorDialog(
+                      context,
+                      'Already registered email',
+                    );
+                  } else if (e.code == 'invalid-email') {
+                    await showErrorDialog(
+                      context,
+                      'Invalid email',
+                    );
+                  } else {
+                    await showErrorDialog(
+                      context,
+                      'Error:${e.code}',
+                    );
+                  }
+                } catch (e) {
+                  await showErrorDialog(
+                    context,
+                    e.toString(),
+                  );
                 }
               },
               child: (const Text('Register'))),

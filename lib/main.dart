@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:learning_project/constants/routes.dart';
 import 'package:learning_project/firebase_options.dart';
 import 'package:learning_project/views/login_view.dart';
 import 'package:learning_project/views/register_view.dart';
@@ -24,9 +25,9 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
       //movement b/w screens. These are named routes
       routes: {
-        '/login/': (context) => const LoginView(),
-        '/register/': (context) => const RegisterView(),
-        '/notes/': (context) => const NotesView(),
+        loginRoute: (context) => const LoginView(),
+        registerRoute: (context) => const RegisterView(),
+        notesRoute: (context) => const NotesView(),
       },
     );
   }
@@ -111,8 +112,10 @@ class _NotesViewState extends State<NotesView> {
                 if (!mounted) {
                   return;
                 }
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (_) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  loginRoute,
+                  (_) => false,
+                );
               }
               break;
           }

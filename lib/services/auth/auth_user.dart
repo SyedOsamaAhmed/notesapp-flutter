@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter/foundation.dart';
 
-@immutable // internals of parrent and sub classes can't be changed
+@immutable // internals of parent and sub classes can't be changed
 class AuthUser {
   final bool isEmailVerified;
 

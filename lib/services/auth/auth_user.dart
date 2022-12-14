@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 class AuthUser {
   final bool isEmailVerified;
 
-  const AuthUser(this.isEmailVerified);
+  const AuthUser({required this.isEmailVerified});
   //taking user info from firebase making a copy to this class without directly exposing it to user interface.
-  factory AuthUser.fromFirebase(User user) => AuthUser(user.emailVerified);
+  factory AuthUser.fromFirebase(User user) =>
+      AuthUser(isEmailVerified: user.emailVerified);
 }

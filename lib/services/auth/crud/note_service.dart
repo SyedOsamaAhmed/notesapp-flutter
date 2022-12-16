@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart'; //for database storage and talking
 import 'package:path_provider/path_provider.dart'; // for getting docs folder in respective ios and android as code runs in sandbox so they require permission from operating for reading and writing.
@@ -70,8 +68,57 @@ class UnableToGetDocumentDirectory implements Exception {}
 
 class DatabaseIsNotOpen implements Exception {}
 
+class CouldNotDeleteUser implements Exception {}
+
+class UserAlreadyExist implements Exception {}
+
 class NotesService {
   Database? _db;
+
+  Database _getDatabaseOrThrow() {
+    final db = _db;
+    if (db == null) {
+      throw DatabaseIsNotOpen();
+    } else {
+      return db;
+    }
+  }
+
+  Future<void> deleteUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(
+      userTable,
+      where: email = '?',
+      whereArgs: [email.toLowerCase()],
+    );
+
+    if (deletedCount != 1) {
+      throw CouldNotDeleteUser();
+    }
+  }
+
+  Future<DatabaseUser> createUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+
+    //checking if user already exists in database:
+    final results = await db.query(
+      userTable,
+      limit: 1,
+      where: 'email=?',
+      whereArgs: [email.toLowerCase()],
+    );
+
+    if (results.isNotEmpty) {
+      throw UserAlreadyExist();
+    }
+
+    final userId = await db.insert(userTable, {
+      emailColumn: email,
+    });
+
+    return DatabaseUser(id: userId, email: email);
+  }
+
   Future<void> close() async {
     final db = _db;
     if (db == null) {

@@ -72,6 +72,8 @@ class CouldNotDeleteUser implements Exception {}
 
 class UserAlreadyExist implements Exception {}
 
+class UserNotFound implements Exception {}
+
 class NotesService {
   Database? _db;
 
@@ -81,6 +83,24 @@ class NotesService {
       throw DatabaseIsNotOpen();
     } else {
       return db;
+    }
+  }
+
+  Future<DatabaseUser> getUser({required String email}) async {
+    final db = _getDatabaseOrThrow();
+
+    //checking if user already exists in database:
+    final results = await db.query(
+      userTable,
+      limit: 1,
+      where: 'email=?',
+      whereArgs: [email.toLowerCase()],
+    );
+
+    if (results.isEmpty) {
+      throw UserNotFound();
+    } else {
+      return DatabaseUser.fromRow(results.first);
     }
   }
 

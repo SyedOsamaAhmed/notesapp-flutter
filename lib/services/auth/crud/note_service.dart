@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:learning_project/services/auth/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart'; //for database storage and talking
 import 'package:path_provider/path_provider.dart'; // for getting docs folder in respective ios and android as code runs in sandbox so they require permission from operating for reading and writing.
 import 'package:path/path.dart'
@@ -62,18 +63,6 @@ class DatabaseNote {
   int get hashCode => id.hashCode;
 }
 
-class DatabaseAlreadyOpenException implements Exception {}
-
-class UnableToGetDocumentDirectory implements Exception {}
-
-class DatabaseIsNotOpen implements Exception {}
-
-class CouldNotDeleteUser implements Exception {}
-
-class UserAlreadyExist implements Exception {}
-
-class UserNotFound implements Exception {}
-
 class NotesService {
   Database? _db;
 
@@ -84,6 +73,91 @@ class NotesService {
     } else {
       return db;
     }
+  }
+
+  Future<DatabaseNote> updateNotes({
+    required DatabaseNote note,
+    required String text,
+  }) async {
+    final db = _getDatabaseOrThrow();
+    //checking if exists in database:
+    await getNote(id: note.id);
+    final updatedCount = await db.update(notesTable, {
+      textColumn: text,
+      isSyncedWithCloudColum: 0,
+    });
+
+    if (updatedCount == 0) {
+      throw CouldNotUpdateNote();
+    } else {
+      return await getNote(id: note.id);
+    }
+  }
+
+  Future<Iterable<DatabaseNote>> getAllNotes() async {
+    final db = _getDatabaseOrThrow();
+    final notes = await db.query(notesTable);
+    return notes.map((noteRow) => DatabaseNote.fromRow(noteRow));
+  }
+
+  Future<DatabaseNote> getNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+
+    final notes = await db.query(
+      limit: 1,
+      notesTable,
+      where: 'id=?',
+      whereArgs: [id],
+    );
+
+    if (notes.isEmpty) {
+      throw CouldNotFindNote();
+    } else {
+      return DatabaseNote.fromRow(notes.first);
+    }
+  }
+
+  Future<int> deleteAllNotes() async {
+    final db = _getDatabaseOrThrow();
+    return await db.delete(notesTable);
+  }
+
+  Future<void> deleteNote({required int id}) async {
+    final db = _getDatabaseOrThrow();
+    final deletedCount = await db.delete(
+      notesTable,
+      where: 'id=?',
+      whereArgs: [id],
+    );
+    if (deletedCount == 0) {
+      throw CouldNotDeleteNote();
+    }
+  }
+
+  Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
+    final db = _getDatabaseOrThrow();
+    final dbUser = await getUser(email: owner.email);
+
+    //check id of owner matches with database
+    if (dbUser != owner) {
+      throw UserNotFound();
+    }
+
+    const text = '';
+    final noteId = await db.insert(notesTable, {
+      userIdColumn: owner.id,
+      textColumn: text,
+      isSyncedWithCloudColum: 1,
+    });
+
+    final note = DatabaseNote(
+      id: noteId,
+      userId: owner.id,
+      text: text,
+      isSyncedWithCloud: true,
+    );
+
+    return note;
   }
 
   Future<DatabaseUser> getUser({required String email}) async {

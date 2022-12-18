@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:learning_project/constants/routes.dart';
 import 'package:learning_project/enums/menu_action.dart';
 import 'package:learning_project/services/auth/auth_service.dart';
+import 'package:learning_project/services/auth/crud/note_service.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -11,6 +12,22 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  //creating note service class instance so we can use it and email is created for calling getorcreate user function to ensure same firebase logged in user is in database
+  late final NotesService _notesService;
+  String get userEmail => AuthService.firebase().currentUser!.email!;
+
+  @override
+  void initState() {
+    _notesService = NotesService();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +54,49 @@ class _NotesViewState extends State<NotesView> {
           ];
         })
       ]),
-      body: const Text('Main UI'),
+      body: FutureBuilder(
+          future: _notesService.getOrCreateUser(email: userEmail),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                return StreamBuilder(
+                  stream: _notesService.allNotes,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return const Text('Waiting for all notes...');
+                      default:
+                        return Scaffold(
+                            body: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              CircularProgressIndicator(),
+                              SizedBox(
+                                height: 15,
+                              )
+                            ],
+                          ),
+                        ));
+                    }
+                  },
+                );
+
+              default:
+                return Scaffold(
+                    body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      CircularProgressIndicator(),
+                      SizedBox(
+                        height: 15,
+                      )
+                    ],
+                  ),
+                ));
+            }
+          }),
     );
   }
 }

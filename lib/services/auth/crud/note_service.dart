@@ -67,6 +67,10 @@ class DatabaseNote {
 
 class NotesService {
   Database? _db;
+
+  static final _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance();
+  factory NotesService() => _shared;
   //caching:
 
   List<DatabaseNote> _notes = [];

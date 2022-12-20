@@ -67,7 +67,7 @@ class DatabaseNote {
 
 class NotesService {
   Database? _db;
-
+//Singleton pattern:
   static final _shared = NotesService._sharedInstance();
   NotesService._sharedInstance();
   factory NotesService() => _shared;

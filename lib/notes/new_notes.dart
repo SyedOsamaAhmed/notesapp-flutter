@@ -23,6 +23,24 @@ class _NewNotesViewState extends State<NewNotesView> {
     super.initState();
   }
 
+//update database as user types:
+  void _textControllerListener() async {
+    final note = _note;
+    if (note == null) {
+      return;
+    }
+    final text = _textController.text;
+    await _notesService.updateNotes(
+      note: note,
+      text: text,
+    );
+  }
+
+  void _setupTextControllerListener() {
+    _textController.removeListener(_textControllerListener);
+    _textController.addListener(_textControllerListener);
+  }
+
   Future<DatabaseNote> createNewNote() async {
     final existingNote = _note;
     if (existingNote != null) {
@@ -65,6 +83,34 @@ class _NewNotesViewState extends State<NewNotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('New note')),
-        body: const Text('Your new notes'));
+        body: FutureBuilder(
+            future: createNewNote(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                  _note = snapshot.data as DatabaseNote;
+                  _setupTextControllerListener();
+                  return TextField(
+                    controller: _textController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                        hintText: 'Starting typing notes here....'),
+                  );
+                default:
+                  return Scaffold(
+                      body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(
+                          height: 15,
+                        )
+                      ],
+                    ),
+                  ));
+              }
+            }));
   }
 }

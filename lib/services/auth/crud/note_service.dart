@@ -324,17 +324,17 @@ const userIdColumn = 'user_id';
 const textColumn = 'text';
 const isSyncedWithCloudColum = 'is_synced_with_cloud';
 const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
-        "id"	INTEGER NOT NULL UNIQUE,
-        "email"	TEXT NOT NULL UNIQUE,
-        PRIMARY KEY("id" AUTOINCREMENT)
+	"id"	INTEGER NOT NULL UNIQUE,
+	"email"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 ''';
 
-const createNotesTable = '''CREATE TABLE IF NOT EXISTS "notes" (
+const createNotesTable = '''CREATE TABLE IF NOT EXISTS "note" (
 	"id"	INTEGER NOT NULL,
 	"user_id"	INTEGER NOT NULL,
 	"text"	TEXT,
-	"is_synced_with_cloud"	INTEGER DEFAULT 0,
+	"is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("user_id") REFERENCES "user"("id")
 );

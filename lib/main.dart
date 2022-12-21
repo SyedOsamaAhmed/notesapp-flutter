@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
         verifyEmailRoute: (context) => const VerificationView(),
-        newNoteRoute: (context) => const NewNoteView(),
+        newNoteRoute: (context) => const NewNotesView(),
       },
     );
   }

@@ -68,14 +68,22 @@ class DatabaseNote {
 class NotesService {
   Database? _db;
 //Singleton pattern:
+/*Since broadcast does not hold value of stream controller when listeners are subscribed to it so we remedy by calling broadcast listen function and assign it values from database making it late final */
   static final _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
+
   factory NotesService() => _shared;
   //caching:
 
   List<DatabaseNote> _notes = [];
-  final _notesStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  late final StreamController<List<DatabaseNote>> _notesStreamController;
+
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
   Future<void> _cacheNotes() async {

@@ -4,7 +4,7 @@ import 'package:learning_project/constants/routes.dart';
 import 'package:learning_project/services/auth/auth_exceptions.dart';
 import 'package:learning_project/services/auth/auth_service.dart';
 
-import '../utilities/show_error_dialog.dart'; // through show keyword we accquired necessary things from library that we need and as is used as alias here so that if we mistakenly build log function we are  unable to distiguish it from dart libary function.
+import '../utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

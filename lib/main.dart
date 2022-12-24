@@ -8,7 +8,7 @@ import 'package:learning_project/notes/notes_view.dart';
 import 'package:learning_project/views/register_view.dart';
 import 'package:learning_project/views/verifyEmail_view.dart';
 
-import 'notes/new_notes.dart';
+import 'notes/create_update_note.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
         verifyEmailRoute: (context) => const VerificationView(),
-        newNoteRoute: (context) => const NewNotesView(),
+        createUpdateNoteRoute: (context) => const CreateUpdateNotesView(),
       },
     );
   }

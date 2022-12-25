@@ -75,6 +75,12 @@ class _NotesViewState extends State<NotesView> {
                                 id: note.id,
                               );
                             },
+                            onTap: (note) {
+                              Navigator.of(context).pushNamed(
+                                createUpdateNoteRoute,
+                                arguments: note,
+                              );
+                            },
                           );
                         } else {
                           return Scaffold(

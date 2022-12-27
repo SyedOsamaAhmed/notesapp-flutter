@@ -3,7 +3,7 @@ import 'package:learning_project/constants/routes.dart';
 import 'package:learning_project/enums/menu_action.dart';
 import 'package:learning_project/notes/notes_list_view.dart';
 import 'package:learning_project/services/auth/auth_service.dart';
-import 'package:learning_project/services/auth/crud/note_service.dart';
+import 'package:learning_project/notes/crud/note_service.dart';
 
 import '../utilities/dialogs/logout_dialog.dart';
 
@@ -17,7 +17,7 @@ class NotesView extends StatefulWidget {
 class _NotesViewState extends State<NotesView> {
   //creating note service class instance so we can use it and email is created for calling getorcreate user function to ensure same firebase logged in user is in database
   late final NotesService _notesService;
-  String get userEmail => AuthService.firebase().currentUser!.email!;
+  String get userEmail => AuthService.firebase().currentUser!.email;
 
   @override
   void initState() {

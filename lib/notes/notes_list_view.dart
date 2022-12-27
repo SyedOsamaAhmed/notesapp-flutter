@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learning_project/services/auth/crud/note_service.dart';
+import 'package:learning_project/notes/crud/note_service.dart';
 
 import '../utilities/dialogs/delete_dialog.dart';
 

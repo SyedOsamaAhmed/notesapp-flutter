@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:learning_project/extensions/list/filter.dart';
-import 'package:learning_project/services/auth/crud/crud_exceptions.dart';
+import 'package:learning_project/notes/crud/crud_exceptions.dart';
 import 'package:sqflite/sqflite.dart'; //for database storage and talking
 import 'package:path_provider/path_provider.dart'; // for getting docs folder in respective ios and android as code runs in sandbox so they require permission from operating for reading and writing.
 import 'package:path/path.dart'

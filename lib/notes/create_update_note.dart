@@ -3,7 +3,7 @@ import 'package:learning_project/services/auth/auth_service.dart';
 // import 'package:learning_project/notes/crud/note_service.dart';
 import 'package:learning_project/utilities/generics/get_arguments.dart';
 import 'package:learning_project/services/cloud/cloud_note.dart';
-import 'package:learning_project/services/cloud/cloud_storage_exceptions.dart';
+// import 'package:learning_project/services/cloud/cloud_storage_exceptions.dart';
 import 'package:learning_project/services/cloud/fireebase_cloud_storage.dart';
 
 class CreateUpdateNotesView extends StatefulWidget {
@@ -25,6 +25,7 @@ class _CreateUpdateNotesViewState extends State<CreateUpdateNotesView> {
   @override
   void initState() {
     // _notesService = NotesService();
+    _noteService = FirebaseCloudStorage();
     _textController = TextEditingController();
     super.initState();
   }

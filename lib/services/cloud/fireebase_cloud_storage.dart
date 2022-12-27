@@ -29,6 +29,7 @@ class FirebaseCloudStorage {
   }
 
   Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) =>
+      /*It subscribes to runtime changes in notes and checks if query snapshot contain documents then we map those documents one by one on cloudnote the where is filtering note id of document must match with passed owner id */
       notes.snapshots().map((event) => event.docs
           .map((doc) => CloudNote.fromSnapshot(doc))
           .where((note) => note.ownerUserId == ownerUserId));
@@ -42,23 +43,25 @@ class FirebaseCloudStorage {
             isEqualTo: ownerUserId,
           )
           .get()
-          .then((value) => value.docs.map((doc) {
-                return CloudNote(
-                  documentId: doc.id,
-                  ownerUserId: doc.data()[ownerUserIdFieldName] as String,
-                  text: doc.data()[textFieldName] as String,
-                );
-              }));
+          .then(
+              (value) => value.docs.map((doc) => CloudNote.fromSnapshot(doc)));
     } catch (e) {
       throw CouldNotGetAllNotesException();
     }
   }
 
-  void createNewNotes({required ownerUserId}) async {
-    await notes.add({
+  Future<CloudNote> createNewNotes({required ownerUserId}) async {
+    final documents = await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
     });
+
+    final fetchedNote = await documents.get();
+    return CloudNote(
+      documentId: fetchedNote.id,
+      ownerUserId: ownerUserId,
+      text: '',
+    );
   }
 
   //Singleton pattern for cloud storage:

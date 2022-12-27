@@ -1,4 +1,4 @@
-import 'dart:async';
+/* import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:learning_project/extensions/list/filter.dart';
@@ -373,3 +373,4 @@ const createNotesTable = '''CREATE TABLE IF NOT EXISTS "note" (
 	FOREIGN KEY("user_id") REFERENCES "user"("id")
 );
 ''';
+ */

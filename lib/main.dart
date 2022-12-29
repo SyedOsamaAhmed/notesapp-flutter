@@ -145,6 +145,24 @@ class _HomePageState extends State<HomePage> {
                       hintText: 'Enter a number',
                     ),
                     keyboardType: TextInputType.number,
+                  ),
+                  Row(
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            context
+                                .read<CounterBloc>()
+                                .add(DecrementEvent(_controller.text));
+                          },
+                          child: const Text('-')),
+                      TextButton(
+                          onPressed: () {
+                            context
+                                .read<CounterBloc>()
+                                .add(IncrementEvent(_controller.text));
+                          },
+                          child: const Text('+'))
+                    ],
                   )
                 ],
               );

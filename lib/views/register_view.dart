@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:learning_project/constants/routes.dart';
 import 'package:learning_project/services/auth/auth_exceptions.dart';
-import 'package:learning_project/services/auth/auth_service.dart';
 import 'package:learning_project/services/auth/bloc/auth_events.dart';
 import 'package:learning_project/services/auth/bloc/auth_state.dart';
 import 'package:learning_project/utilities/dialogs/error_dialog.dart';

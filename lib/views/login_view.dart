@@ -19,7 +19,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  late final CloseDialog? _closeDialogHandler;
+  CloseDialog? _closeDialogHandler;
 
   @override
   void initState() {

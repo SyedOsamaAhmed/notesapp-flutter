@@ -5,9 +5,30 @@ import 'package:learning_project/helpers/loading/loding_screen_controller.dart';
 
 class LoadingScreen {
   //Singleton pattern:
+  factory LoadingScreen() => _shared;
   static final _shared = LoadingScreen._sharedInstance();
   LoadingScreen._sharedInstance();
-  factory LoadingScreen() => _shared;
+
+  LoadingScreenController? controller;
+
+  void show({
+    required BuildContext context,
+    required String text,
+  }) {
+    if (controller?.update(text) ?? false) {
+      return;
+    } else {
+      controller = showOverlay(
+        context: context,
+        text: text,
+      );
+    }
+  }
+
+  void hide() {
+    controller?.close();
+    controller = null;
+  }
 
   LoadingScreenController showOverlay(
       {required BuildContext context, required String text}) {
@@ -64,6 +85,20 @@ class LoadingScreen {
             ),
           )),
         );
+      },
+    );
+
+    state?.insert(overlay);
+
+    return LoadingScreenController(
+      close: () {
+        text_.close();
+        overlay.remove();
+        return true;
+      },
+      update: (text) {
+        text_.add(text);
+        return true;
       },
     );
   }

@@ -48,13 +48,14 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(title: const Text('Login')),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               const Text(
-                  'Please login to your account and interact with notes'),
+                  'Please login to your account and interact with notes                                                                                                                                                                                                                                                                       '),
               TextField(
                 controller: _email,
                 enableSuggestions: false,

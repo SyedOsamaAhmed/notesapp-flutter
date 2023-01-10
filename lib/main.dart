@@ -10,6 +10,7 @@ import 'package:learning_project/views/forgot_password_view.dart';
 import 'package:learning_project/views/login_view.dart';
 import 'package:learning_project/notes/notes_view.dart';
 import 'package:learning_project/views/register_view.dart';
+
 import 'package:learning_project/views/verifyEmail_view.dart';
 
 import 'notes/create_update_note.dart';
